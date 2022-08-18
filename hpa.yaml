@@ -1,0 +1,21 @@
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: nodeapp-hpa
+  annotations:
+    autoscaling.alpha.kubernetes.io/behavior: '{"ScaleUp":{"StabilizationWindowSeconds":0,"Policies":[{"Type":"Pods","Value":1,"PeriodSeconds":15},{"Type":"Percent","Value":10,"PeriodSeconds":15}]},"ScaleDown":{"StabilizationWindowSeconds":0,"Policies":[{"Type":"Pods","Value":1,"PeriodSeconds":15}]}}'
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: node-app
+  minReplicas: 1
+  maxReplicas: 3
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 40
