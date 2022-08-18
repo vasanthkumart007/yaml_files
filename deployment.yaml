@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-app
+  namespace: aathishtest1
+  labels:
+    app: node-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: node-app
+  template:
+    metadata:
+      labels:
+        app: node-app
+    spec:
+      containers:
+      - name: node-app
+        image: srivarshan/sag_task:1.0.0
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "1"
+          limits:
+            memory: "1Gi"
+            cpu: "1"
+        ports:
+        - containerPort: 3000
+        env:
+        - name: CONFIGURATION_OF_DBUSER
+          valueFrom:
+            secretKeyRef:
+              name:  mysecret
+              key: DB_USER
+        - name: CONFIGURATION_OF_DBPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name:  mysecret
+              key: DB_PASSWORD
+        - name: CONFIGURATION_OF_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name:  mysecret
+              key: DB_DATABASE
+        - name: CONFIGURATION_OF_DBHOST
+          valueFrom:
+            secretKeyRef:
+              name:  mysecret
+              key: DB_HOST
+        - name: CONFIGURATION_OF_DBPORT
+          valueFrom:
+            secretKeyRef:
+              name:  mysecret
+              key: DB_PORT
+        - name: CONFIGURATION_OF_PORT
+          valueFrom:
+            secretKeyRef:
+              name:  mysecret
+              key: PORT
